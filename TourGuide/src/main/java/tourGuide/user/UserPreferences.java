@@ -3,9 +3,12 @@ package tourGuide.user;
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.javamoney.moneta.Money;
+import tourGuide.util.UserPreferencesSerializer;
 
-
+//@JsonSerialize (using = UserPreferencesSerializer.class)
 public class UserPreferences {
 	
 	private int attractionProximity = Integer.MAX_VALUE;
@@ -19,7 +22,7 @@ public class UserPreferences {
 	
 	public UserPreferences() {
 	}
-	
+
 	public void setAttractionProximity(int attractionProximity) {
 		this.attractionProximity = attractionProximity;
 	}
@@ -27,7 +30,16 @@ public class UserPreferences {
 	public int getAttractionProximity() {
 		return attractionProximity;
 	}
-	
+
+	// Added getter and setter for CurrencyUnit
+	public CurrencyUnit getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(CurrencyUnit currency) {
+		this.currency = currency;
+	}
+
 	public Money getLowerPricePoint() {
 		return lowerPricePoint;
 	}

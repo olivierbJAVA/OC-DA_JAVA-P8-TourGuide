@@ -6,6 +6,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import org.javamoney.moneta.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -19,9 +22,14 @@ import tourGuide.attraction.NearbyAttraction;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.tracker.Tracker;
 import tourGuide.user.User;
+import tourGuide.user.UserPreferences;
 import tourGuide.user.UserReward;
+import tourGuide.util.UserPreferencesSerializer;
 import tripPricer.Provider;
 import tripPricer.TripPricer;
+
+import javax.money.CurrencyUnit;
+import javax.money.Monetary;
 
 @Service
 public class TourGuideService {
@@ -133,7 +141,35 @@ public class TourGuideService {
 
 		return nearbyAttractions;
 	}
-	
+
+	public UserPreferences getUserPreferences(User user) {
+		UserPreferences userPreferences = user.getUserPreferences();
+		return userPreferences;
+	}
+
+	public UserPreferences postUserPreferences(User user, UserPreferences userPreferences) {
+		ObjectMapper mapper = new ObjectMapper();
+
+		SimpleModule module = new SimpleModule();
+		module.addSerializer(UserPreferences.class, new UserPreferencesSerializer());
+		mapper.registerModule(module);
+
+		UserPreferences preferences = new UserPreferences();
+		preferences.setAttractionProximity(userPreferences.getAttractionProximity());
+		preferences.setTripDuration(userPreferences.getTripDuration());
+		preferences.setTicketQuantity(userPreferences.getTicketQuantity());
+		preferences.setNumberOfAdults(userPreferences.getNumberOfAdults());
+		preferences.setNumberOfChildren(userPreferences.getNumberOfChildren());
+
+		Money lowerPricePoint = Money.of(userPreferences.getLowerPricePoint().getNumber(),"USD");
+		Money highPricePoint = Money.of(userPreferences.getHighPricePoint().getNumber(),"USD");
+		preferences.setLowerPricePoint(lowerPricePoint);
+		preferences.setHighPricePoint(highPricePoint);
+
+		user.setUserPreferences(preferences);
+		return userPreferences;
+	}
+
 	private void addShutDownHook() {
 		Runtime.getRuntime().addShutdownHook(new Thread() { 
 		      public void run() {
@@ -157,7 +193,10 @@ public class TourGuideService {
 			String email = userName + "@tourGuide.com";
 			User user = new User(UUID.randomUUID(), userName, phone, email);
 			generateUserLocationHistory(user);
-			
+
+			UserPreferences userPreferences = new UserPreferences();
+			user.setUserPreferences(userPreferences);
+
 			internalUserMap.put(userName, user);
 		});
 		logger.debug("Created " + InternalTestHelper.getInternalUserNumber() + " internal test users.");
@@ -168,7 +207,7 @@ public class TourGuideService {
 			user.addToVisitedLocations(new VisitedLocation(user.getUserId(), new Location(generateRandomLatitude(), generateRandomLongitude()), getRandomTime()));
 		});
 	}
-	
+
 	private double generateRandomLongitude() {
 		double leftLimit = -180;
 	    double rightLimit = 180;
