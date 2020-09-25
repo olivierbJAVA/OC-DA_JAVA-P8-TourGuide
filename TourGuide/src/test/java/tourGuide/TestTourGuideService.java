@@ -19,6 +19,7 @@ import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
 import tourGuide.user.User;
+import tourGuide.user.UserPreferences;
 import tripPricer.Provider;
 
 public class TestTourGuideService {
@@ -326,4 +327,63 @@ public class TestTourGuideService {
 		assertEquals(5, providers.size());// initial wrong = 10
 	}
 
+	@Test
+	public void getUserPreferences() {
+		// ARRANGE
+		GpsUtil gpsUtil = new GpsUtil();
+		RewardCentral rewardCentral = new RewardCentral();
+		RewardsService rewardsService = new RewardsService(gpsUtil, rewardCentral);
+		InternalTestHelper.setInternalUserNumber(0);
+		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
+
+		tourGuideService.tracker.stopTracking();
+
+		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
+		UserPreferences userPreferences = new UserPreferences();
+		userPreferences.setAttractionProximity(1000);
+		userPreferences.setCurrency("USD");
+		userPreferences.setLowerPricePoint(0D);
+		userPreferences.setHighPricePoint(1000000D);
+		userPreferences.setTripDuration(5);
+		userPreferences.setTicketQuantity(3);
+		userPreferences.setNumberOfAdults(2);
+		userPreferences.setNumberOfChildren(1);
+
+		user.setUserPreferences(userPreferences);
+
+		// ACT
+		UserPreferences userPreferencesRetrieved = tourGuideService.getUserPreferences(user);
+
+		// ASSERT
+		assertEquals(userPreferences, userPreferencesRetrieved);
+	}
+
+	@Test
+	public void postUserPreferences() {
+		// ARRANGE
+		GpsUtil gpsUtil = new GpsUtil();
+		RewardCentral rewardCentral = new RewardCentral();
+		RewardsService rewardsService = new RewardsService(gpsUtil, rewardCentral);
+		InternalTestHelper.setInternalUserNumber(0);
+		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
+
+		tourGuideService.tracker.stopTracking();
+
+		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
+		UserPreferences userPreferences = new UserPreferences();
+		userPreferences.setAttractionProximity(1000);
+		userPreferences.setCurrency("USD");
+		userPreferences.setLowerPricePoint(0D);
+		userPreferences.setHighPricePoint(1000000D);
+		userPreferences.setTripDuration(5);
+		userPreferences.setTicketQuantity(3);
+		userPreferences.setNumberOfAdults(2);
+		userPreferences.setNumberOfChildren(1);
+
+		// ACT
+		tourGuideService.postUserPreferences(user, userPreferences);
+
+		// ASSERT
+		assertEquals(userPreferences, user.getUserPreferences());
+	}
 }
