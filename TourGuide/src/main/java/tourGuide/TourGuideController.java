@@ -74,10 +74,11 @@ public class TourGuideController {
     //        ...
     //     }
     @RequestMapping("/getAllCurrentLocations")
-    public String getAllCurrentLocations() throws JsonProcessingException {
+    public HashMap<String, Location> getAllCurrentLocations() throws JsonProcessingException {
         HashMap<String, Location> allCurrentLocations = tourGuideService.getAllCurrentLocations();
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(allCurrentLocations);
+        //ObjectMapper mapper = new ObjectMapper();
+        return allCurrentLocations;
+        //return mapper.writeValueAsString(allCurrentLocations);
         //return JsonStream.serialize(allCurrentLocations);
     }
     
@@ -90,21 +91,21 @@ public class TourGuideController {
     }
 
     @RequestMapping("/getPreferences")
-    public String getPreferences(@RequestParam String userName) {
+    public UserPreferences getPreferences(@RequestParam String userName) {
         UserPreferences userPreferences = tourGuideService.getUserPreferences(getUser(userName));
-        System.out.println(" userPreferences getHighPricePoint = " + userPreferences.getHighPricePoint().toString());
-        return JsonStream.serialize(userPreferences);
+        return userPreferences;
+        //return JsonStream.serialize(userPreferences);
     }
 
     @RequestMapping("/postPreferences")
-    public String postPreferences(@RequestParam String userName, @RequestBody UserPreferences userPreferences) {
+    public UserPreferences postPreferences(@RequestParam String userName, @RequestBody UserPreferences userPreferences) {
         /*
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
         module.addSerializer(UserPreferences.class, new UserPreferencesSerializer());
         mapper.registerModule(module);
         */
-        return JsonStream.serialize(tourGuideService.postUserPreferences(getUser(userName), userPreferences));
+        return tourGuideService.postUserPreferences(getUser(userName), userPreferences);
     }
 
     private User getUser(String userName) {

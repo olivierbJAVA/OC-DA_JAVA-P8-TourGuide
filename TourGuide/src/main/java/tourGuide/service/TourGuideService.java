@@ -148,6 +148,8 @@ public class TourGuideService {
 	}
 
 	public UserPreferences postUserPreferences(User user, UserPreferences userPreferences) {
+		user.setUserPreferences(userPreferences);
+		/*
 		ObjectMapper mapper = new ObjectMapper();
 
 		SimpleModule module = new SimpleModule();
@@ -167,6 +169,7 @@ public class TourGuideService {
 		preferences.setHighPricePoint(highPricePoint);
 
 		user.setUserPreferences(preferences);
+		*/
 		return userPreferences;
 	}
 
