@@ -233,11 +233,6 @@ public class TestTourGuideService {
 
 		for (int j=0; j<5; j++) {
 			assertEquals(nearbyAttractionsExpected.get(j).getAttractionName(), nearbyAttractionsActual.get(j).getAttractionName());
-			assertEquals(nearbyAttractionsExpected.get(j).getAttractionLocation().latitude, nearbyAttractionsActual.get(j).getAttractionLocation().latitude, 0);
-			assertEquals(nearbyAttractionsExpected.get(j).getAttractionLocation().longitude, nearbyAttractionsActual.get(j).getAttractionLocation().longitude, 0);
-			assertEquals(nearbyAttractionsExpected.get(j).getUserLocation().latitude, nearbyAttractionsActual.get(j).getUserLocation().latitude, 0);
-			assertEquals(nearbyAttractionsExpected.get(j).getUserLocation().longitude, nearbyAttractionsActual.get(j).getUserLocation().longitude, 0);
-			assertEquals(nearbyAttractionsExpected.get(j).getDistanceAttractionUserLocation(), nearbyAttractionsActual.get(j).getDistanceAttractionUserLocation(), 0);
 		}
 	}
 
