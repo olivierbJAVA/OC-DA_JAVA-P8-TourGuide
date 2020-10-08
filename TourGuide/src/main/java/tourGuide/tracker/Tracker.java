@@ -19,8 +19,6 @@ public class Tracker extends Thread {
 	private final RewardsService rewardsService;
 	private boolean stop = false;
 
-	private CompletableFuture<String> completableFuture;
-
 	public Tracker(TourGuideService tourGuideService, RewardsService rewardsService) {
 		this.tourGuideService = tourGuideService;
 		this.rewardsService = rewardsService;
