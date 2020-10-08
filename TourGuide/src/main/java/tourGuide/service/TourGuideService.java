@@ -6,9 +6,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import org.javamoney.moneta.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -17,19 +14,14 @@ import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
-import org.w3c.dom.Attr;
 import tourGuide.attraction.NearbyAttraction;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.tracker.Tracker;
 import tourGuide.user.User;
 import tourGuide.user.UserPreferences;
 import tourGuide.user.UserReward;
-import tourGuide.util.UserPreferencesSerializer;
 import tripPricer.Provider;
 import tripPricer.TripPricer;
-
-import javax.money.CurrencyUnit;
-import javax.money.Monetary;
 
 @Service
 public class TourGuideService {
@@ -65,15 +57,10 @@ public class TourGuideService {
 		return visitedLocation;
 	}
 
-
 	public HashMap<String, Location> getAllCurrentLocations() {
-
 		HashMap<String, Location> allCurrentLocations = new HashMap<>();
-
 		List<User> allUsers = getAllUsers();
-
 		allUsers.forEach(user -> allCurrentLocations.put(user.getUserId().toString(), user.getLastVisitedLocation().location));
-
 		return allCurrentLocations;
 	}
 
@@ -104,7 +91,6 @@ public class TourGuideService {
 
 		VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
 		user.addToVisitedLocations(visitedLocation);
-		//rewardsService.calculateRewards(user);
 		return visitedLocation;
 	}
 
@@ -113,25 +99,6 @@ public class TourGuideService {
 
 		List<Attraction> allAttractions = gpsUtil.getAttractions();
 
-		// VERSION_1
-		/*
-		allAttractions.stream()
-					.map(attraction->rewardsService.getDistance(attraction, visitedLocation.location ))
-					.sorted()
-					.limit(5)
-					.forEach( nearbyAttractionsDistance ->  {
-							allAttractions.stream()
-							.forEach( attraction -> {
-								if (rewardsService.getDistance(attraction, visitedLocation.location) == nearbyAttractionsDistance) {
-									//NearbyAttraction nearbyAttraction = new NearbyAttraction( attraction.attractionName, new Location(attraction.latitude, attraction.longitude),visitedLocation.location, nearbyAttractionsDistance, rewardsService.getRewardPoints(attraction,user ) );
-									nearbyAttractions.add(new NearbyAttraction(attraction.attractionName, new Location(attraction.latitude, attraction.longitude),visitedLocation.location, nearbyAttractionsDistance, rewardsService.getRewardPoints(attraction, user )));
-									System.out.println("AttractionName : " + attraction.attractionName + " - Distance = " + rewardsService.getDistance(attraction, visitedLocation.location) + " - NearbyDistance = " + nearbyAttractionsDistance);
-								}
-							});
-					});
-		*/
-
-		//VERSION_2
 		TreeMap<Double, NearbyAttraction> treeAttractionDistance = new TreeMap<>();
 		allAttractions.forEach(attraction -> treeAttractionDistance.put(rewardsService.getDistance(attraction, visitedLocation.location), new NearbyAttraction(attraction.attractionName, new Location(attraction.latitude, attraction.longitude), visitedLocation.location, rewardsService.getDistance(attraction, visitedLocation.location), rewardsService.getRewardPoints(attraction, user))));
 
@@ -149,27 +116,6 @@ public class TourGuideService {
 
 	public UserPreferences postUserPreferences(User user, UserPreferences userPreferences) {
 		user.setUserPreferences(userPreferences);
-		/*
-		ObjectMapper mapper = new ObjectMapper();
-
-		SimpleModule module = new SimpleModule();
-		module.addSerializer(UserPreferences.class, new UserPreferencesSerializer());
-		mapper.registerModule(module);
-
-		UserPreferences preferences = new UserPreferences();
-		preferences.setAttractionProximity(userPreferences.getAttractionProximity());
-		preferences.setTripDuration(userPreferences.getTripDuration());
-		preferences.setTicketQuantity(userPreferences.getTicketQuantity());
-		preferences.setNumberOfAdults(userPreferences.getNumberOfAdults());
-		preferences.setNumberOfChildren(userPreferences.getNumberOfChildren());
-
-		Money lowerPricePoint = Money.of(userPreferences.getLowerPricePoint().getNumber(),"USD");
-		Money highPricePoint = Money.of(userPreferences.getHighPricePoint().getNumber(),"USD");
-		preferences.setLowerPricePoint(lowerPricePoint);
-		preferences.setHighPricePoint(highPricePoint);
-
-		user.setUserPreferences(preferences);
-		*/
 		return userPreferences;
 	}
 

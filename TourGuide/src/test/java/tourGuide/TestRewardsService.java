@@ -40,15 +40,10 @@ public class TestRewardsService {
 		user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date()));
 
 		// ACT
-		//We call calculateRewards instead of trackUserLocation
-		//tourGuideService.trackUserLocation(user);
 		rewardsService.calculateRewards(user);
 
 		// ASSERT
 		List<UserReward> userRewards = user.getUserRewards();
-
-		//tourGuideService.tracker.stopTracking();
-
 		assertEquals(1, userRewards.size());
 	}
 	
@@ -79,7 +74,6 @@ public class TestRewardsService {
 		assertTrue(rewardsService.nearAttraction(visitedLocationRandom, attraction));
 	}
 
-	//@Ignore // Needs fixed - can throw ConcurrentModificationException
 	@Test
 	public void nearAllAttractions() {
 		// ARRANGE
@@ -95,7 +89,6 @@ public class TestRewardsService {
 
 		rewardsService.calculateRewards(tourGuideService.getAllUsers().get(0));
 		List<UserReward> userRewards = tourGuideService.getUserRewards(tourGuideService.getAllUsers().get(0));
-		//tourGuideService.tracker.stopTracking();
 
 		assertEquals(gpsUtil.getAttractions().size(), userRewards.size());
 	}
