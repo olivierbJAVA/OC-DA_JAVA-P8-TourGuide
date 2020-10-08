@@ -143,6 +143,7 @@ public class TourGuideService {
 			User user = new User(UUID.randomUUID(), userName, phone, email);
 			generateUserLocationHistory(user);
 
+			// Added for userPreferences initialization
 			UserPreferences userPreferences = new UserPreferences();
 			user.setUserPreferences(userPreferences);
 
