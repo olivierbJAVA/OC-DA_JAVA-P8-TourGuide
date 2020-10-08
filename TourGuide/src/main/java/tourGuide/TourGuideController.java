@@ -61,7 +61,7 @@ public class TourGuideController {
         return userPreferences;
     }
 
-    @GetMapping("/postPreferences")
+    @PostMapping("/postPreferences")
     public UserPreferences postPreferences(@RequestParam String userName, @RequestBody UserPreferences userPreferences) {
         return tourGuideService.postUserPreferences(getUser(userName), userPreferences);
     }
