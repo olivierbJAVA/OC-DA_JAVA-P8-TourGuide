@@ -15,6 +15,7 @@ public class Tracker extends Thread {
 	private Logger logger = LoggerFactory.getLogger(Tracker.class);
 	private static final long trackingPollingInterval = TimeUnit.MINUTES.toSeconds(1);//initial = 5
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+	private final ForkJoinPool forkJoinPool = new ForkJoinPool(100);
 	private final TourGuideService tourGuideService;
 	private final RewardsService rewardsService;
 	private boolean stop = false;
@@ -31,7 +32,8 @@ public class Tracker extends Thread {
 	 */
 	public void stopTracking() {
 		stop = true;
-		executorService.shutdownNow();
+		forkJoinPool.shutdown();
+		executorService.shutdown();
 	}
 	
 	@Override
@@ -46,8 +48,6 @@ public class Tracker extends Thread {
 			List<User> users = tourGuideService.getAllUsers();
 			logger.debug("Begin Tracker. Tracking " + users.size() + " users.");
 			stopWatch.start();
-
-			ForkJoinPool forkJoinPool = new ForkJoinPool(100);
 
 			users.forEach((user)-> {
 				CompletableFuture
