@@ -2,6 +2,8 @@ package tourGuide.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import gpsUtil.GpsUtil;
@@ -14,7 +16,10 @@ import tourGuide.user.UserReward;
 
 @Service
 public class RewardsService {
-    private static final double STATUTE_MILES_PER_NAUTICAL_MILE = 1.15077945;
+
+	private Logger logger = LoggerFactory.getLogger(RewardsService.class);
+
+	private static final double STATUTE_MILES_PER_NAUTICAL_MILE = 1.15077945;
 
 	// proximity in miles
     private int defaultProximityBuffer = 10;
@@ -37,7 +42,7 @@ public class RewardsService {
 	}
 	
 	public void calculateRewards(User user) {
-		//System.out.println("Calculate Rewards - Thread : " + Thread.currentThread().getName() + " - User : " + user.getUserName());
+		logger.debug("Calculate Rewards - Thread : " + Thread.currentThread().getName() + " - User : " + user.getUserName());
 
 		List<VisitedLocation> userLocations = user.getVisitedLocations();
 		List<Attraction> attractions = gpsUtil.getAttractions();
