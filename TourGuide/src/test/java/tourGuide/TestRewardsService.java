@@ -32,7 +32,6 @@ public class TestRewardsService {
 
 		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
-
 		tourGuideService.tracker.stopTracking();
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
@@ -67,7 +66,6 @@ public class TestRewardsService {
 		RewardsService rewardsService = new RewardsService(gpsUtil, rewardCentral);
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
 		Attraction attraction = gpsUtil.getAttractions().get(0);
-
 		VisitedLocation visitedLocationRandom = new VisitedLocation(UUID.randomUUID(), new Location(TourGuideTestUtil.generateRandomLatitude(), TourGuideTestUtil.generateRandomLongitude()), TourGuideTestUtil.getRandomTime());
 
 		// ACT & ASSERT
@@ -84,12 +82,13 @@ public class TestRewardsService {
 
 		InternalTestHelper.setInternalUserNumber(1);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
-
 		tourGuideService.tracker.stopTracking();
 
+		// ACT
 		rewardsService.calculateRewards(tourGuideService.getAllUsers().get(0));
 		List<UserReward> userRewards = tourGuideService.getUserRewards(tourGuideService.getAllUsers().get(0));
 
+		// ASSERT
 		assertEquals(gpsUtil.getAttractions().size(), userRewards.size());
 	}
 

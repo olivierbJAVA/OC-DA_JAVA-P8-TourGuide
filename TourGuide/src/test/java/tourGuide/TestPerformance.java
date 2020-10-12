@@ -12,12 +12,16 @@ import java.util.concurrent.TimeUnit;
 
 import gpsUtil.location.Location;
 import org.apache.commons.lang3.time.StopWatch;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
 import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.springframework.boot.logging.LogLevel;
+import org.springframework.boot.logging.LoggingSystem;
 import rewardCentral.RewardCentral;
 import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.RewardsService;
@@ -26,7 +30,11 @@ import tourGuide.user.User;
 import utils.TourGuideTestUtil;
 
 public class TestPerformance {
-	
+
+	@BeforeClass
+	public static void beforeTest() {
+		LoggingSystem.get(ClassLoader.getSystemClassLoader()).setLogLevel(Logger.ROOT_LOGGER_NAME, LogLevel.INFO);
+	}
 	/*
 	 * A note on performance improvements:
 	 *     
@@ -55,34 +63,28 @@ public class TestPerformance {
 
 		// ARRANGE
 		// Users should be incremented up to 100,000, and test finishes within 15 minutes
-		InternalTestHelper.setInternalUserNumber(100);
+		InternalTestHelper.setInternalUserNumber(100000);
 
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardCentral rewardCentral = new RewardCentral();
-
 		RewardsService mockRewardsService = Mockito.spy(new RewardsService(gpsUtil,rewardCentral ));
-
 		doNothing().when(mockRewardsService).calculateRewards(any(User.class));
-
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, mockRewardsService);
-		tourGuideService.tracker.stopTracking();
-
 		List<User> allUsers = tourGuideService.getAllUsers();
-
+		tourGuideService.tracker.stopTracking();
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 
 		// ACT
 		ForkJoinPool forkJoinPool = new ForkJoinPool(100);
-
 		allUsers.forEach((user)-> {
 			CompletableFuture
 					.runAsync(()->tourGuideService.trackUserLocation(user), forkJoinPool)
 					.thenAccept(unused->mockRewardsService.calculateRewards(user));
 		});
-
 		boolean result = forkJoinPool.awaitQuiescence(15,TimeUnit.MINUTES);
 		stopWatch.stop();
+		forkJoinPool.shutdown();
 
 		// ASSERT
 		System.out.println("highVolumeTrackLocation: Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
@@ -98,37 +100,29 @@ public class TestPerformance {
 
 		// ARRANGE
 		// Users should be incremented up to 100,000, and test finishes within 20 minutes
-		InternalTestHelper.setInternalUserNumber(100);
+		InternalTestHelper.setInternalUserNumber(100000);
 
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-
 		VisitedLocation visitedLocationRandom = new VisitedLocation(UUID.randomUUID(), new Location(TourGuideTestUtil.generateRandomLatitude(), TourGuideTestUtil.generateRandomLongitude()), TourGuideTestUtil.getRandomTime());
-
 		TourGuideService mockTourGuideService = Mockito.spy(new TourGuideService(gpsUtil,rewardsService));
-
 		doReturn(visitedLocationRandom).when(mockTourGuideService).trackUserLocation(any(User.class));
-
-		mockTourGuideService.tracker.stopTracking();
-
-		Attraction attraction = gpsUtil.getAttractions().get(0);
-
 		List<User> allUsers = mockTourGuideService.getAllUsers();
-
+		mockTourGuideService.tracker.stopTracking();
+		Attraction attraction = gpsUtil.getAttractions().get(0);
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 
 		// ACT
 		ForkJoinPool forkJoinPool = new ForkJoinPool(100);
-
 		allUsers.forEach((user)-> {
 			user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date()));
 			CompletableFuture
 					.runAsync(()->mockTourGuideService.trackUserLocation(user), forkJoinPool)
 					.thenAccept(unused->rewardsService.calculateRewards(user));
 		});
-
 		boolean result = forkJoinPool.awaitQuiescence(20,TimeUnit.MINUTES);
+		forkJoinPool.shutdown();
 		stopWatch.stop();
 
 		// ASSERT
@@ -154,29 +148,22 @@ public class TestPerformance {
 
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardCentral rewardCentral = new RewardCentral();
-
 		RewardsService rewardsService = new RewardsService(gpsUtil, rewardCentral);
-
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
-
-		tourGuideService.tracker.stopTracking();
-
 		List<User> allUsers = tourGuideService.getAllUsers();
-
+		tourGuideService.tracker.stopTracking();
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 
-		ForkJoinPool forkJoinPool = new ForkJoinPool(100);
-
 		// ACT
+		ForkJoinPool forkJoinPool = new ForkJoinPool(100);
 		allUsers.forEach((user)-> {
 			CompletableFuture
 					.runAsync(()->tourGuideService.trackUserLocation(user), forkJoinPool)
 					.thenAccept(unused->rewardsService.calculateRewards(user));
 		});
-
 		boolean result = forkJoinPool.awaitQuiescence(15,TimeUnit.MINUTES);
-
+		forkJoinPool.shutdown();
 		stopWatch.stop();
 
 		// ASSERT
