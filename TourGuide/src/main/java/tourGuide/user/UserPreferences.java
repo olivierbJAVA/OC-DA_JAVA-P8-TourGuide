@@ -6,7 +6,6 @@ public class UserPreferences {
 	private String currency = "USD";
 	private Double lowerPricePoint = 0D;
 	private Double highPricePoint = 1000000D;
-
 	private int tripDuration = 1;
 	private int ticketQuantity = 1;
 	private int numberOfAdults = 1;
