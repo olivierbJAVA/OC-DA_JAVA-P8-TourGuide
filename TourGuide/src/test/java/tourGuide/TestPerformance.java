@@ -63,11 +63,11 @@ public class TestPerformance {
 
 		// ARRANGE
 		// Users should be incremented up to 100,000, and test finishes within 15 minutes
-		InternalTestHelper.setInternalUserNumber(100000);
+		InternalTestHelper.setInternalUserNumber(100);
 
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardCentral rewardCentral = new RewardCentral();
-		RewardsService mockRewardsService = Mockito.spy(new RewardsService(gpsUtil,rewardCentral ));
+		RewardsService mockRewardsService = Mockito.spy(new RewardsService(gpsUtil,rewardCentral));
 		doNothing().when(mockRewardsService).calculateRewards(any(User.class));
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, mockRewardsService);
 		List<User> allUsers = tourGuideService.getAllUsers();
@@ -100,7 +100,7 @@ public class TestPerformance {
 
 		// ARRANGE
 		// Users should be incremented up to 100,000, and test finishes within 20 minutes
-		InternalTestHelper.setInternalUserNumber(100000);
+		InternalTestHelper.setInternalUserNumber(100);
 
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
@@ -144,7 +144,7 @@ public class TestPerformance {
 
 		// ARRANGE
 		// Users should be incremented up to 100,000, and test finishes within 15 minutes
-		InternalTestHelper.setInternalUserNumber(100);
+		InternalTestHelper.setInternalUserNumber(10000);
 
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardCentral rewardCentral = new RewardCentral();

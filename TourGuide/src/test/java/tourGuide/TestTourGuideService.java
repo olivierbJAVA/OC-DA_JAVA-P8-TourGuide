@@ -238,12 +238,7 @@ public class TestTourGuideService {
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		UserPreferences userPreferences = new UserPreferences();
-		userPreferences.setAttractionProximity(1000);
-		userPreferences.setCurrency("USD");
-		userPreferences.setLowerPricePoint(0D);
-		userPreferences.setHighPricePoint(10000D);
 		userPreferences.setTripDuration(5);
-		userPreferences.setTicketQuantity(3);
 		userPreferences.setNumberOfAdults(2);
 		userPreferences.setNumberOfChildren(1);
 		user.setUserPreferences(userPreferences);
@@ -267,12 +262,7 @@ public class TestTourGuideService {
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		UserPreferences userPreferences = new UserPreferences();
-		userPreferences.setAttractionProximity(1000);
-		userPreferences.setCurrency("USD");
-		userPreferences.setLowerPricePoint(0D);
-		userPreferences.setHighPricePoint(10000D);
 		userPreferences.setTripDuration(5);
-		userPreferences.setTicketQuantity(3);
 		userPreferences.setNumberOfAdults(2);
 		userPreferences.setNumberOfChildren(1);
 
