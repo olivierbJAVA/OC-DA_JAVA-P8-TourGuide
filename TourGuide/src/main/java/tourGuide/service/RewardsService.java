@@ -39,13 +39,9 @@ public class RewardsService {
 	public void calculateRewards(User user) {
 		//System.out.println("Calculate Rewards - Thread : " + Thread.currentThread().getName() + " - User : " + user.getUserName());
 
-		//List<VisitedLocation> userLocations = Collections.synchronizedList(user.getVisitedLocations());
-		//List<Attraction> attractions = Collections.synchronizedList(gpsUtil.getAttractions());
-
 		List<VisitedLocation> userLocations = user.getVisitedLocations();
 		List<Attraction> attractions = gpsUtil.getAttractions();
 
-		//synchronized (this) {
 		for(VisitedLocation visitedLocation : userLocations) {
 			for(Attraction attraction : attractions) {
 				if(user.getUserRewards().stream().filter(r -> r.attraction.attractionName.equals(attraction.attractionName)).count() == 0) {
@@ -55,7 +51,6 @@ public class RewardsService {
 				}
 			}
 		}
-		//}
 	}
 	
 	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
