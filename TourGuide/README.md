@@ -15,7 +15,7 @@ For more information about the application, its functioning, the goals of this e
 
 ### TourGuide Monolithic version
 
-This version is a monolithic version of the TourGuide application. There is also a splitted version available for which you will find more information in the following repository (most up to date branch = *develop*):
+This version is a monolithic version of the TourGuide application. There is also a splitted and distributed version available for which you will find more information in the following repository (most up to date branch = *develop*):
 <https://github.com/ob78/TourGuide_Distributed_MainApplication/tree/develop/TourGuide>
 
 Technologies used are the following :
