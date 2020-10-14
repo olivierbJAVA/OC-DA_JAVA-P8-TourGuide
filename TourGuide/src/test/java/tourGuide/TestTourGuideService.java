@@ -40,8 +40,6 @@ public class TestTourGuideService {
 
 		// ACT
 		VisitedLocation visitedLocation = tourGuideService.getUserLocation(user);
-		//VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user);
-		//tourGuideService.tracker.stopTracking();
 
 		// ASSERT
 		assertTrue(visitedLocation.userId.equals(user.getUserId()));
@@ -67,8 +65,6 @@ public class TestTourGuideService {
 		// ACT
 		User retrievedUser1 = tourGuideService.getUser(user1.getUserName());
 		User retrievedUser2 = tourGuideService.getUser(user2.getUserName());
-
-		//tourGuideService.tracker.stopTracking();
 
 		// ASSERT
 		assertEquals(user1, retrievedUser1);
@@ -97,8 +93,6 @@ public class TestTourGuideService {
 		User retrievedUser1 = tourGuideService.getUser(user1.getUserName());
 		User retrievedUser2 = tourGuideService.getUser(user2.getUserName());
 
-		//tourGuideService.tracker.stopTracking();
-		
 		assertEquals(user1, retrievedUser1);
 		assertEquals(user2, retrievedUser2);
 	}
@@ -123,8 +117,6 @@ public class TestTourGuideService {
 		// ACT
 		List<User> allUsers = tourGuideService.getAllUsers();
 
-		//tourGuideService.tracker.stopTracking();
-
 		// ASSERT
 		assertEquals(2, allUsers.size());
 		assertTrue(allUsers.contains(user1));
@@ -147,9 +139,7 @@ public class TestTourGuideService {
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user);
-		
-		//tourGuideService.tracker.stopTracking();
-		
+
 		assertEquals(user.getUserId(), visitedLocation.userId);
 	}
 	
@@ -173,8 +163,6 @@ public class TestTourGuideService {
 
 		// ACT
 		List<Attraction> attractions = tourGuideService.getNearByAttractions(visitedLocation);
-		
-		//tourGuideService.tracker.stopTracking();
 
 		// ASSERT
 		assertEquals(5, attractions.size());
@@ -195,11 +183,9 @@ public class TestTourGuideService {
 
 		// ACT
 		List<Provider> providers = tourGuideService.getTripDeals(user);
-		
-		//tourGuideService.tracker.stopTracking();
 
 		// ASSERT
-		assertEquals(5, providers.size());// initial wrong = 10
+		assertEquals(5, providers.size());
 	}
 
 }
