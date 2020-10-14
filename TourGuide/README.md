@@ -96,6 +96,14 @@ The following EndPoints are exposed by the application :
 >Request Parameter : *userName* = name of the user 
 > / Request Body : *userPreferences* = preferences of the user
 
+### Features branches
+
+In addition to this most up to date *develop* branch, there are also the following branches available corresponding to each feature development :
+- *feature_speedImprovement* : improvement of the application speed (track user location and calculate rewards functionalities)
+- *feature_nearbyAttractions* : modifying an existing functionality to provide the 5 nearest attractions for a user
+- *feature_allLocations* : adding a new functionality that provides the last location for all users
+- *feature_userPreferences* : modifying an existing functionality to allow users to consult and modify their travel preferences as well as take into account of these preferences in the proposed trip deals
+
 ### Tests
 
 Tests are included. You can run them using JUnit runner or using Gradle.
