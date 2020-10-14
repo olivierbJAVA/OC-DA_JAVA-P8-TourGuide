@@ -42,8 +42,6 @@ public class TestTourGuideService {
 
 		// ACT
 		VisitedLocation visitedLocation = tourGuideService.getUserLocation(user);
-		//VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user);
-		//tourGuideService.tracker.stopTracking();
 
 		// ASSERT
 		assertTrue(visitedLocation.userId.equals(user.getUserId()));
@@ -83,7 +81,6 @@ public class TestTourGuideService {
 
 		// ASSERT
 		assertEquals(allCurrentLocationsExpected, allCurrentLocationsActual);
-		//assertTrue(allCurrentLocationsExpected.equals(allCurrentLocationsActual));
 	}
 
 	@Test
@@ -106,8 +103,6 @@ public class TestTourGuideService {
 		// ACT
 		User retrievedUser1 = tourGuideService.getUser(user1.getUserName());
 		User retrievedUser2 = tourGuideService.getUser(user2.getUserName());
-
-		//tourGuideService.tracker.stopTracking();
 
 		// ASSERT
 		assertEquals(user1, retrievedUser1);
@@ -136,8 +131,6 @@ public class TestTourGuideService {
 		User retrievedUser1 = tourGuideService.getUser(user1.getUserName());
 		User retrievedUser2 = tourGuideService.getUser(user2.getUserName());
 
-		//tourGuideService.tracker.stopTracking();
-		
 		assertEquals(user1, retrievedUser1);
 		assertEquals(user2, retrievedUser2);
 	}
@@ -162,8 +155,6 @@ public class TestTourGuideService {
 		// ACT
 		List<User> allUsers = tourGuideService.getAllUsers();
 
-		//tourGuideService.tracker.stopTracking();
-
 		// ASSERT
 		assertEquals(2, allUsers.size());
 		assertTrue(allUsers.contains(user1));
@@ -186,9 +177,7 @@ public class TestTourGuideService {
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user);
-		
-		//tourGuideService.tracker.stopTracking();
-		
+
 		assertEquals(user.getUserId(), visitedLocation.userId);
 	}
 
@@ -226,77 +215,11 @@ public class TestTourGuideService {
 		// ACT
 		List<NearbyAttraction> nearbyAttractionsActual = tourGuideService.getNearByAttractions(visitedLocation, user);
 
-		//tourGuideService.tracker.stopTracking();
-
 		// ASSERT
 		assertEquals(5, nearbyAttractionsActual.size());
 
 		for (int j=0; j<5; j++) {
 			assertEquals(nearbyAttractionsExpected.get(j).getAttractionName(), nearbyAttractionsActual.get(j).getAttractionName());
-		}
-	}
-
-	@Test
-	public void getNearbyAttractionsOtherVersion() {
-		//Added to fix NumberFormatException due to decimal number separator
-		Locale.setDefault(new Locale("en", "US"));
-
-		// ARRANGE
-		GpsUtil gpsUtil = new GpsUtil();
-		RewardCentral rewardCentral = new RewardCentral();
-		RewardsService rewardsService = new RewardsService(gpsUtil, rewardCentral);
-		InternalTestHelper.setInternalUserNumber(0);
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
-
-		tourGuideService.tracker.stopTracking();
-
-		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-		VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user);
-
-		List<Attraction> allAttractions = gpsUtil.getAttractions();
-
-		TreeMap<Double, NearbyAttraction> treeAttractionDistance = new TreeMap<>();
-		allAttractions.forEach(attraction -> treeAttractionDistance.put(rewardsService.getDistance(attraction, visitedLocation.location), new NearbyAttraction( attraction.attractionName, new Location(attraction.latitude, attraction.longitude), visitedLocation.location, rewardsService.getDistance(attraction, visitedLocation.location), rewardsService.getRewardPoints(attraction, user))));
-
-		System.out.println("User location : lat = " + visitedLocation.location.latitude + " - long = " + visitedLocation.location.longitude);
-
-		// Print for help
-		for (Map.Entry<Double, NearbyAttraction> entry : treeAttractionDistance.entrySet()) {
-			System.out.println("AllAttractions - Key: " + entry.getKey() + ". Value: " + entry.getValue().getAttractionName());
-		}
-
-		List<NearbyAttraction> nearbyAttractionsExpected = treeAttractionDistance.values().stream()
-				.limit(5)
-				.collect(Collectors.toList());
-
-		/*
-		TreeMap<Double, NearbyAttraction> treeAttractionDistanceLimitedToFive = treeAttractionDistance.entrySet().stream()
-				.limit(5)
-				.collect(TreeMap::new, (m, e) -> m.put(e.getKey(), e.getValue()), Map::putAll);
-
-		// Print for help
-		for (Map.Entry<Double, NearbyAttraction> entry : treeAttractionDistanceLimitedToFive.entrySet()) {
-			System.out.println("LimitedTo5 - Key: " + entry.getKey() + ". Value: " + entry.getValue().getAttractionName());
-		}
-		*/
-		// ACT
-		List<NearbyAttraction> nearbyAttractionsActual = tourGuideService.getNearByAttractions(visitedLocation, user);
-
-		// Print for help
-		nearbyAttractionsActual.forEach( (nearbyAttraction)->System.out.println(nearbyAttraction.getAttractionName()) );
-
-		//tourGuideService.tracker.stopTracking();
-
-		// ASSERT
-		assertEquals(5, nearbyAttractionsActual.size());
-
-		for (int j=0; j<5; j++) {
-			assertEquals(nearbyAttractionsExpected.get(j).getAttractionName(), nearbyAttractionsActual.get(j).getAttractionName());
-			assertEquals(nearbyAttractionsExpected.get(j).getAttractionLocation().latitude, nearbyAttractionsActual.get(j).getAttractionLocation().latitude, 0);
-			assertEquals(nearbyAttractionsExpected.get(j).getAttractionLocation().longitude, nearbyAttractionsActual.get(j).getAttractionLocation().longitude, 0);
-			assertEquals(nearbyAttractionsExpected.get(j).getUserLocation().latitude, nearbyAttractionsActual.get(j).getUserLocation().latitude, 0);
-			assertEquals(nearbyAttractionsExpected.get(j).getUserLocation().longitude, nearbyAttractionsActual.get(j).getUserLocation().longitude, 0);
-			assertEquals(nearbyAttractionsExpected.get(j).getDistanceAttractionUserLocation(), nearbyAttractionsActual.get(j).getDistanceAttractionUserLocation(), 0);
 		}
 	}
 
@@ -315,8 +238,6 @@ public class TestTourGuideService {
 
 		// ACT
 		List<Provider> providers = tourGuideService.getTripDeals(user);
-		
-		//tourGuideService.tracker.stopTracking();
 
 		// ASSERT
 		assertEquals(5, providers.size());// initial wrong = 10
@@ -335,12 +256,7 @@ public class TestTourGuideService {
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		UserPreferences userPreferences = new UserPreferences();
-		userPreferences.setAttractionProximity(1000);
-		userPreferences.setCurrency("USD");
-		userPreferences.setLowerPricePoint(0D);
-		userPreferences.setHighPricePoint(1000000D);
 		userPreferences.setTripDuration(5);
-		userPreferences.setTicketQuantity(3);
 		userPreferences.setNumberOfAdults(2);
 		userPreferences.setNumberOfChildren(1);
 
@@ -366,12 +282,7 @@ public class TestTourGuideService {
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		UserPreferences userPreferences = new UserPreferences();
-		userPreferences.setAttractionProximity(1000);
-		userPreferences.setCurrency("USD");
-		userPreferences.setLowerPricePoint(0D);
-		userPreferences.setHighPricePoint(1000000D);
 		userPreferences.setTripDuration(5);
-		userPreferences.setTicketQuantity(3);
 		userPreferences.setNumberOfAdults(2);
 		userPreferences.setNumberOfChildren(1);
 

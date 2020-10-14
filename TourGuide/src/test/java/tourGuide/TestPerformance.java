@@ -60,8 +60,7 @@ public class TestPerformance {
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardCentral rewardCentral = new RewardCentral();
 
-		//RewardsService rewardsService = new RewardsService(gpsUtil, rewardCentral);
-		RewardsService mockRewardsService = Mockito.spy(new RewardsService(gpsUtil,rewardCentral ));
+		RewardsService mockRewardsService = Mockito.spy(new RewardsService(gpsUtil,rewardCentral));
 
 		doNothing().when(mockRewardsService).calculateRewards(any(User.class));
 
@@ -74,7 +73,6 @@ public class TestPerformance {
 		stopWatch.start();
 
 		// ACT
-		//DEBUT_VERSION_AMELIOREE
 		ForkJoinPool forkJoinPool = new ForkJoinPool(100);
 
 		allUsers.forEach((user)-> {
@@ -84,18 +82,8 @@ public class TestPerformance {
 		});
 
 		boolean result = forkJoinPool.awaitQuiescence(15,TimeUnit.MINUTES);
-		//FIN_VERSION_AMELIOREE
-
-		//VERSION_INITIALE
-		/*
-		for(User user : allUsers) {
-			tourGuideService.trackUserLocation(user); // deja lance dans ToutGuideService tracker ?
-		}
-		*/
-
 		stopWatch.stop();
 
-		//tourGuideService.tracker.stopTracking();
 
 		// ASSERT
 		System.out.println("highVolumeTrackLocation: Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
@@ -112,13 +100,6 @@ public class TestPerformance {
 		// ARRANGE
 		// Users should be incremented up to 100,000, and test finishes within 20 minutes
 		InternalTestHelper.setInternalUserNumber(100);
-
-		/*
-		GpsUtil mockGpsUtil =  Mockito.spy(new GpsUtil());
-		RewardsService rewardsService = new RewardsService(mockGpsUtil, new RewardCentral());
-
-		TourGuideService mockTourGuideService = Mockito.spy(new TourGuideService(mockGpsUtil,rewardsService ));
-		*/
 
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
@@ -139,7 +120,6 @@ public class TestPerformance {
 		stopWatch.start();
 
 		// ACT
-		//DEBUT_VERSION_AMELIOREE
 		ForkJoinPool forkJoinPool = new ForkJoinPool(100);
 
 		allUsers.forEach((user)-> {
@@ -150,17 +130,6 @@ public class TestPerformance {
 		});
 
 		boolean result = forkJoinPool.awaitQuiescence(20,TimeUnit.MINUTES);
-		//FIN_VERSION_AMELIOREE
-
-		//VERSION_INITIALE
-		/*
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
-		
-		allUsers.forEach(u -> u.addToVisitedLocations(new VisitedLocation(u.getUserId(), attraction, new Date())));
-	     
-	    allUsers.forEach(u -> rewardsService.calculateRewards(u));
-	    */
-
 		stopWatch.stop();
 
 		// ASSERT
