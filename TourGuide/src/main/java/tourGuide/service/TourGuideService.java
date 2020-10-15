@@ -117,10 +117,10 @@ public class TourGuideService {
 	}
 
 	/**
-	 * Return a list of travels proposed to the user depending on its preferences and rewards points.
+	 * Return a list of travels proposed by external providers to the user depending on its preferences and rewards points.
 	 *
 	 * @param user The user
-	 * @return The list of proposed travels to the user
+	 * @return The list of proposed travels by external providers to the user
 	 */
 	public List<Provider> getTripDeals(User user) {
 		int cumulatativeRewardPoints = user.getUserRewards().stream().mapToInt(i -> i.getRewardPoints()).sum();
