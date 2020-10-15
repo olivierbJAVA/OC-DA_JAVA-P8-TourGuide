@@ -3,6 +3,9 @@ package tourGuide.user;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
 
+/**
+ * Class materializing a user reward.
+ */
 public class UserReward {
 
 	public final VisitedLocation visitedLocation;

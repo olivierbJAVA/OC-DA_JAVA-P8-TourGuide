@@ -18,6 +18,9 @@ import tourGuide.user.User;
 import tourGuide.user.UserReward;
 import utils.TourGuideTestUtil;
 
+/**
+ * Class including unit tests for the rewards service of the TourGuide application.
+ */
 public class TestRewardsService {
 
 	@Test

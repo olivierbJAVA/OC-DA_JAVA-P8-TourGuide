@@ -22,6 +22,9 @@ import tourGuide.user.User;
 import tourGuide.user.UserPreferences;
 import tripPricer.Provider;
 
+/**
+ * Class including unit tests for the services of the TourGuide application.
+ */
 public class TestTourGuideService {
 
 	@Test

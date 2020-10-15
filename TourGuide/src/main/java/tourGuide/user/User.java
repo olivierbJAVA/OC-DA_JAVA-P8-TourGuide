@@ -8,6 +8,9 @@ import java.util.UUID;
 import gpsUtil.location.VisitedLocation;
 import tripPricer.Provider;
 
+/**
+ * Class materializing a user of the application.
+ */
 public class User {
 
 	private final UUID userId;

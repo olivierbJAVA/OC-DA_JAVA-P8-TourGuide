@@ -29,6 +29,9 @@ import tourGuide.service.TourGuideService;
 import tourGuide.user.User;
 import utils.TourGuideTestUtil;
 
+/**
+ * Class including performance tests for the TourGuide application.
+ */
 public class TestPerformance {
 
 	@BeforeClass

@@ -2,6 +2,9 @@ package tourGuide.attraction;
 
 import gpsUtil.location.Location;
 
+/**
+ * Class materializing a nearby attraction.
+ */
 public class NearbyAttraction {
 
     private String attractionName;

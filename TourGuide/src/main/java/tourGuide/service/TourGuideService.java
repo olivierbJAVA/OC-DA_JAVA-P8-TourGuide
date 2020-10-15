@@ -23,6 +23,9 @@ import tourGuide.user.UserReward;
 import tripPricer.Provider;
 import tripPricer.TripPricer;
 
+/**
+ * Class in charge of managing the main services for the TourGuide application.
+ */
 @Service
 public class TourGuideService {
 
@@ -47,11 +50,23 @@ public class TourGuideService {
 		tracker = new Tracker(this, rewardsService);
 		addShutDownHook();
 	}
-	
+
+	/**
+	 * Return the list of rewards of a user.
+	 *
+	 * @param user The User
+	 * @return The list of rewards of the user
+	 */
 	public List<UserReward> getUserRewards(User user) {
 		return user.getUserRewards();
 	}
-	
+
+	/**
+	 * Return the current visited location of a user.
+	 *
+	 * @param user The User
+	 * @return The current visited location of the user
+	 */
 	public VisitedLocation getUserLocation(User user) {
 		VisitedLocation visitedLocation = (user.getVisitedLocations().size() > 0) ?
 			user.getLastVisitedLocation() :
@@ -59,6 +74,11 @@ public class TourGuideService {
 		return visitedLocation;
 	}
 
+	/**
+	 * Return the current location of all users.
+	 *
+	 * @return A HashMap containing for all users : the user id in a String format (Key) and its current location in a Location object (Value)
+	 */
 	public HashMap<String, Location> getAllCurrentLocations() {
 		HashMap<String, Location> allCurrentLocations = new HashMap<>();
 		List<User> allUsers = getAllUsers();
@@ -66,20 +86,42 @@ public class TourGuideService {
 		return allCurrentLocations;
 	}
 
+	/**
+	 * Return a user given its name.
+	 *
+	 * @param userName The name of the user
+	 * @return The user
+	 */
 	public User getUser(String userName) {
 		return internalUserMap.get(userName);
 	}
-	
+
+	/**
+	 * Return all of the users of the application.
+	 *
+	 * @return The list of all users of the application
+	 */
 	public List<User> getAllUsers() {
 		return internalUserMap.values().stream().collect(Collectors.toList());
 	}
-	
+
+	/**
+	 * Add a user.
+	 *
+	 * @param user The user to add
+	 */
 	public void addUser(User user) {
 		if(!internalUserMap.containsKey(user.getUserName())) {
 			internalUserMap.put(user.getUserName(), user);
 		}
 	}
-	
+
+	/**
+	 * Return a list of travels proposed to the user depending on its preferences and rewards points.
+	 *
+	 * @param user The user
+	 * @return The list of proposed travels to the user
+	 */
 	public List<Provider> getTripDeals(User user) {
 		int cumulatativeRewardPoints = user.getUserRewards().stream().mapToInt(i -> i.getRewardPoints()).sum();
 		List<Provider> providers = tripPricer.getPrice(tripPricerApiKey, user.getUserId(), user.getUserPreferences().getNumberOfAdults(), 
@@ -87,7 +129,13 @@ public class TourGuideService {
 		user.setTripDeals(providers);
 		return providers;
 	}
-	
+
+	/**
+	 * Perform the tracking of a user location.
+	 *
+	 * @param user The user
+	 * @return The current visited location of the user
+	 */
 	public VisitedLocation trackUserLocation(User user) {
 		logger.debug("Track Location - Thread : " + Thread.currentThread().getName() + " - User : " + user.getUserName());
 
@@ -96,6 +144,13 @@ public class TourGuideService {
 		return visitedLocation;
 	}
 
+	/**
+	 * Return the 5 nearest attractions of a user.
+	 *
+	 * @param visitedLocation The current visited location of the user
+	 * @param user The user
+	 * @return The 5 nearest attractions of the user
+	 */
 	public List<NearbyAttraction> getNearByAttractions(VisitedLocation visitedLocation, User user) {
 		List<NearbyAttraction> nearbyAttractions = new ArrayList<>();
 		List<Attraction> allAttractions = gpsUtil.getAttractions();
@@ -109,11 +164,24 @@ public class TourGuideService {
 		return nearbyAttractions;
 	}
 
+	/**
+	 * Return the current travel preferences of a user.
+	 *
+	 * @param user The user
+	 * @return The current travel preferences of the user
+	 */
 	public UserPreferences getUserPreferences(User user) {
 		UserPreferences userPreferences = user.getUserPreferences();
 		return userPreferences;
 	}
 
+	/**
+	 * Set the travel preferences of a user.
+	 *
+	 * @param user The user
+	 * @param userPreferences The travel preferences of the user
+	 * @return The saved travel preferences of the user
+	 */
 	public UserPreferences postUserPreferences(User user, UserPreferences userPreferences) {
 		user.setUserPreferences(userPreferences);
 		return userPreferences;
@@ -129,7 +197,7 @@ public class TourGuideService {
 	
 	/**********************************************************************************
 	 * 
-	 * Methods Below: For Internal Testing
+	 * Methods Below: For Internal Testing / Initialization Purpose
 	 * 
 	 **********************************************************************************/
 	private static final String tripPricerApiKey = "test-server-api-key";

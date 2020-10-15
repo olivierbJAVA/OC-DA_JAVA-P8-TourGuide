@@ -1,5 +1,8 @@
 package tourGuide.user;
 
+/**
+ * Class materializing the travel preferences of a user.
+ */
 public class UserPreferences {
 	
 	private int tripDuration = 1;
