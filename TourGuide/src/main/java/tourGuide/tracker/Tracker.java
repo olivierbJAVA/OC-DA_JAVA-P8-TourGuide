@@ -12,7 +12,7 @@ import tourGuide.service.TourGuideService;
 import tourGuide.user.User;
 
 /**
- * Class managing the tracking of users, i.e. tracking of their location and update of rewards
+ * Class managing the tracking of users, i.e. tracking of their location and update of the rewards
  */
 public class Tracker extends Thread {
 	private Logger logger = LoggerFactory.getLogger(Tracker.class);
@@ -40,7 +40,7 @@ public class Tracker extends Thread {
 	}
 
 	/**
-	 * Thread performing the tracking of users, i.e. tracking of their location and update of rewards
+	 * Thread performing the tracking of users, i.e. tracking of their location and update of the rewards
 	 */
 	@Override
 	public void run() {
@@ -66,7 +66,6 @@ public class Tracker extends Thread {
 			});
 
 			//Optional : in case we want to wait for the completion of track users and calculate rewards before Tracker sleeping
-			//Wait maximum time between Timeout and time for forkJoinPool to finish its tasks
 			//forkJoinPool.awaitQuiescence(5,TimeUnit.MINUTES);
 
 			stopWatch.stop();
@@ -81,7 +80,6 @@ public class Tracker extends Thread {
 
 			/*
 			//Optional : in case we want to be sure that the completion of the tasks have been done in the trackingPollingInterval
-			//Wait maximum time between Timeout and time for forkJoinPool to finish its tasks
 			boolean result = forkJoinPool.awaitQuiescence(5,TimeUnit.MINUTES);
 			if(result) {
 				logger.debug("Tracking done in trackingPollingInterval");
